@@ -16,13 +16,14 @@ pages.forEach((page) => {
   // 配置各个单页的 html-webpack-plugin
   var htmlTemplate = new HTMLWebpackPlugin({
     template: path.resolve(__dirname, '../src/template.html'),
-    chunks: [chunkName],
+    chunks: [chunkName, 'vendor'],
     filename: `${chunkName}.html`
   })
   htmlTemplates.push(htmlTemplate)
   // 配置各个单页的入口
   entries[chunkName] = path.resolve(__dirname, page)
 })
+entries.vendor = ['babel-polyfill'] // 配置公共 chunk
 
 module.exports = {
   // 打包入口
@@ -68,6 +69,7 @@ module.exports = {
       {
         test: /\.less$/,
         exclude: /node_modules/,
+        // include: [/src/, /antd/],
         use: extractLessPlugin.extract({
           fallback: 'style-loader?singleton',
           use: [
