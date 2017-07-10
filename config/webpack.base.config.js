@@ -16,13 +16,14 @@ pages.forEach((page) => {
   // 配置各个单页的 html-webpack-plugin
   var htmlTemplate = new HTMLWebpackPlugin({
     template: path.resolve(__dirname, '../src/template.html'),
-    chunks: [chunkName],
+    chunks: ['vendor', chunkName],
     filename: `${chunkName}.html`
   })
   htmlTemplates.push(htmlTemplate)
   // 配置各个单页的入口
   entries[chunkName] = path.resolve(__dirname, page)
 })
+entries.vendor = ['babel-polyfill', 'react', 'react-dom', 'store', 'prop-types'] // 配置公共 chunk
 
 module.exports = {
   // 打包入口
@@ -47,7 +48,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: 'babel-loader?cacheDirectory'
       }, 
       {
         test: /\.css$/,
@@ -111,7 +112,11 @@ module.exports = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV) // 定义库所依赖的环境变量
       }
     }),
-    new webpack.optimize.ModuleConcatenationPlugin() // webpack3 的一个优化插件，可提升运行性能，如果不是webpack3，则注释掉这个插件
+    new webpack.optimize.ModuleConcatenationPlugin(), // webpack3 的一个优化插件，可提升运行性能，如果不是webpack3，则注释掉这个插件
+    new webpack.optimize.CommonsChunkPlugin({ // 提取公共 chunk
+      name: 'vendor',
+      minChunks: Infinity
+    })
   ],
   // watch: true, // 设置为 true 后，build 时每当文件变化，就会立刻自动打包更新的部分
   devtool: 'cheap-module-source-map' // 开启 source map
