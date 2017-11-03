@@ -105,7 +105,7 @@ module.exports = {
     extractCSSPlugin, // CSS 文件分离出的样式
     extractLessPlugin, // less 文件分离出的样式
     ...htmlTemplates, // HTML 模板引入
-    new webpack.BannerPlugin('copyright by zvit1@github.com'), // 打包后的文件头部加上 banner
+    new webpack.BannerPlugin('copyright by ArthurTsang1@github.com'), // 打包后的文件头部加上 banner
     new webpack.DefinePlugin({
       __ENV__: JSON.stringify(process.env.NODE_ENV), // 定义自己代码中方便使用的环境变量
       'process.env': {
